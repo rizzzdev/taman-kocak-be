@@ -1,0 +1,132 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/app/database/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  fullname      String
+  pictureUrl    String?   @map("picture_url")
+  username      String
+  password      String
+  role          UserRole  @default(USER)
+  createdAt     DateTime  @map("created_at")
+  lastUpdatedAt DateTime? @map("last_updated_at")
+  deletedAt     DateTime  @map("deleted_at")
+
+  sessions  Session[]
+  posts     Post[]
+  comments  Comment[]
+  likes Like[]
+  reposts   Repost[]
+  bookmarks Bookmark[]
+
+  @@unique([username, deletedAt])
+  @@map("users")
+}
+
+enum UserRole {
+  USER
+  SUPER_USER
+}
+
+model Session {
+  id            String    @id @default(cuid())
+  refreshToken  String?   @map("refresh_token")
+  ip            String
+  userAgent     String    @map("user_agent")
+  createdAt     DateTime  @map("created_at")
+  lastUpdatedAt DateTime? @map("last_updated_at")
+  deletedAt     DateTime  @map("deleted_at")
+
+  userId String @map("user_id")
+  user   User   @relation(references: [id], fields: [userId])
+
+  @@unique([refreshToken, deletedAt])
+  @@map("sessions")
+}
+
+model Post {
+  id            String    @id @default(cuid())
+  caption       String
+  imageUrl      String?   @map("image_url")
+  createdAt     DateTime  @map("created_at")
+  lastUpdatedAt DateTime? @map("last_updated_at")
+  deletedAt     DateTime  @map("deleted_at")
+
+  userId    String     @map("user_id")
+  user      User       @relation(references: [id], fields: [userId])
+  comments  Comment[]
+  likes Like[]
+  reposts   Repost[]
+  bookmarks Bookmark[]
+
+  @@map("posts")
+}
+
+model Comment {
+  id            String    @id @default(cuid())
+  text          String
+  createdAt     DateTime  @map("created_at")
+  lastUpdatedAt DateTime? @map("last_updated_at")
+  deletedAt     DateTime  @map("deleted_at")
+
+  postId String @map("post_id")
+  post   Post   @relation(references: [id], fields: [postId])
+  userId String @map("user_id")
+  user   User   @relation(references: [id], fields: [userId])
+
+  @@map("comments")
+}
+
+model Like {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @map("created_at")
+  lastUpdatedAt DateTime? @map("last_updated_at")
+  deletedAt     DateTime  @map("deleted_at")
+
+  postId String @map("post_id")
+  post   Post   @relation(references: [id], fields: [postId])
+  userId String @map("user_id")
+  user   User   @relation(references: [id], fields: [userId])
+
+  @@map("likes")
+}
+
+model Repost {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @map("created_at")
+  lastUpdatedAt DateTime? @map("last_updated_at")
+  deletedAt     DateTime  @map("deleted_at")
+
+  postId String @map("post_id")
+  post   Post   @relation(references: [id], fields: [postId])
+  userId String @map("user_id")
+  user   User   @relation(references: [id], fields: [userId])
+
+  @@map("reposts")
+}
+
+model Bookmark {
+  id            String    @id @default(cuid())
+  createdAt     DateTime  @map("created_at")
+  lastUpdatedAt DateTime? @map("last_updated_at")
+  deletedAt     DateTime  @map("deleted_at")
+
+  postId String @map("post_id")
+  post   Post   @relation(references: [id], fields: [postId])
+  userId String @map("user_id")
+  user   User   @relation(references: [id], fields: [userId])
+
+  @@map("bookmarks")
+}
