@@ -4,6 +4,9 @@ import { BadRequestError } from "../../shared/errors/index.js";
 import { imageUploaderApi } from "../../shared/utils/image-uploader-api.util.js";
 import fs from "fs";
 import axios from "axios";
+import { createClient } from "@supabase/supabase-js";
+import { localDateNow } from "../../shared/utils/date.util.js";
+import { supabaseClient } from "../database/supabase/index.js";
 
 // const storage = multer.diskStorage({
 //   destination: (request, file, callback) => {
@@ -17,21 +20,13 @@ const MB_IN_BYTES = 1024 * 1024;
 //   storage,
 // });
 
-const uploadImage = (path: string) => {
-  const isPathExist = fs.existsSync(process.cwd() + path);
-  if (!isPathExist) {
-    fs.mkdirSync(process.cwd() + path);
-  }
+const uploadImage = () => {
+  // const isPathExist = fs.existsSync(process.cwd() + path);
+  // if (!isPathExist) {
+  //   fs.mkdirSync(process.cwd() + path);
+  // }
 
-  const storage = multer.diskStorage({
-    destination: (request, file, callback) => {
-      callback(null, process.cwd() + path);
-    },
-    filename: (request, file, callback) => {
-      const format = file.originalname.split(".").pop();
-      callback(null, `${Date.now()}.${format}`);
-    },
-  });
+  const storage = multer.memoryStorage();
 
   return multer({
     storage,
@@ -42,18 +37,16 @@ type ImageType = "profile-picture" | "post-image";
 
 export const imageUploaderMiddleware = (type: ImageType) => {
   return async (request: Request, response: Response, next: NextFunction) => {
-    let upload: multer.Multer;
+    const upload = uploadImage();
     let path: string;
     let fieldName: string;
 
     if (type === "profile-picture") {
-      path = `/public/profile-pictures`;
+      path = `/profile-pictures/`;
       fieldName = "pictureUrl";
-      upload = uploadImage(path);
     } else {
-      path = `/public/post-images`;
+      path = `/post-images/`;
       fieldName = "imageUrl";
-      upload = uploadImage(path);
     }
 
     upload.single("image")(request, response, async (error) => {
@@ -77,44 +70,24 @@ export const imageUploaderMiddleware = (type: ImageType) => {
         return next(error);
       }
 
-      request.body[fieldName] = `${path}/${request.file.filename}`;
+      const imageBuffer = request.file.buffer;
+      const format = request.file.mimetype.split("/").pop();
+      const now = localDateNow().getTime();
+      const filename = now + "." + format;
+
+      const { error: _error } = await supabaseClient.storage
+        .from("image")
+        .upload(path + filename, imageBuffer);
+
+      if (_error) {
+        const error = new BadRequestError(_error.message);
+
+        return next(error);
+      }
+
+      request.body[fieldName] = `${path}${filename}`;
 
       return next();
     });
   };
-};
-
-const upload = () => {
-  const storage = multer.memoryStorage();
-
-  return multer({
-    storage,
-  });
-};
-
-export const uploadMiddleware = (
-  request: Request,
-  response: Response,
-  next: NextFunction,
-) => {
-  upload().single("image")(request, response, async () => {
-    if (request.file) {
-      const image = request.file.buffer.toString();
-
-      try {
-        const _response = await axios.post(
-          "https://api.imgbb.com/1/upload?key=8fe14a6567fd63dc0ad5ad99f4523c3a",
-          {
-            image,
-          },
-        );
-
-        return response.send({ success: true, image: image });
-      } catch (error) {
-        return response.send({ success: false, image });
-      }
-    }
-
-    return response.send({ file: null });
-  });
 };

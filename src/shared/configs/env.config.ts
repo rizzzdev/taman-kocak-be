@@ -12,7 +12,9 @@ const prodClientUrl = process.env.PROD_CLIENT_URL;
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 
-const imgHostingApiKey = process.env.IMG_HOSTING_API_KEY;
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_KEY;
+const supabasePassword = process.env.SUPABASE_PASSWORD;
 
 export const envConfig = {
   nodeEnv,
@@ -21,5 +23,7 @@ export const envConfig = {
   clientUrl: nodeEnv === "dev" ? devClientUrl : prodClientUrl,
   refreshTokenSecret,
   accessTokenSecret,
-  imgHostingApiKey,
+  supabaseUrl,
+  supabaseKey,
+  supabasePassword,
 };
