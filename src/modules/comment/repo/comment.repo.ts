@@ -59,6 +59,7 @@ export class CommentRepo implements ICommentRepo {
         id: comment.post.id,
         caption: comment.post.caption,
         imageUrl: comment.post.imageUrl,
+        trendingScore: comment.post.trendingScore,
         user: {
           id: comment.post.user.id,
           fullname: comment.post.user.fullname,
@@ -128,6 +129,7 @@ export class CommentRepo implements ICommentRepo {
       id: comment.post.id,
       caption: comment.post.caption,
       imageUrl: comment.post.imageUrl,
+      trendingScore: comment.post.trendingScore,
       user: {
         id: comment.post.user.id,
         fullname: comment.post.user.fullname,
@@ -201,6 +203,7 @@ export class CommentRepo implements ICommentRepo {
       id: comment.post.id,
       caption: comment.post.caption,
       imageUrl: comment.post.imageUrl,
+      trendingScore: comment.post.trendingScore,
       user: {
         id: comment.post.user.id,
         fullname: comment.post.user.fullname,
@@ -267,6 +270,7 @@ export class CommentRepo implements ICommentRepo {
       id: comment.post.id,
       caption: comment.post.caption,
       imageUrl: comment.post.imageUrl,
+      trendingScore: comment.post.trendingScore,
       user: {
         id: comment.post.user.id,
         fullname: comment.post.user.fullname,
@@ -332,6 +336,7 @@ export class CommentRepo implements ICommentRepo {
       id: comment.post.id,
       caption: comment.post.caption,
       imageUrl: comment.post.imageUrl,
+      trendingScore: comment.post.trendingScore,
       user: {
         id: comment.post.user.id,
         fullname: comment.post.user.fullname,

@@ -55,6 +55,7 @@ export class LikeRepo implements ILikeRepo {
         id: like.post.id,
         caption: like.post.caption,
         imageUrl: like.post.imageUrl,
+        trendingScore: like.post.trendingScore,
         user: {
           id: like.post.user.id,
           fullname: like.post.user.fullname,
@@ -123,6 +124,7 @@ export class LikeRepo implements ILikeRepo {
       id: like.post.id,
       caption: like.post.caption,
       imageUrl: like.post.imageUrl,
+      trendingScore: like.post.trendingScore,
       user: {
         id: like.post.user.id,
         fullname: like.post.user.fullname,
@@ -194,6 +196,7 @@ export class LikeRepo implements ILikeRepo {
       id: like.post.id,
       caption: like.post.caption,
       imageUrl: like.post.imageUrl,
+      trendingScore: like.post.trendingScore,
       user: {
         id: like.post.user.id,
         fullname: like.post.user.fullname,
@@ -259,6 +262,7 @@ export class LikeRepo implements ILikeRepo {
       id: like.post.id,
       caption: like.post.caption,
       imageUrl: like.post.imageUrl,
+      trendingScore: like.post.trendingScore,
       user: {
         id: like.post.user.id,
         fullname: like.post.user.fullname,

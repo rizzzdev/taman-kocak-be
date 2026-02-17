@@ -58,6 +58,7 @@ export class BookmarkRepo implements IBookmarkRepo {
         id: bookmark.post.id,
         caption: bookmark.post.caption,
         imageUrl: bookmark.post.imageUrl,
+        trendingScore: bookmark.post.trendingScore,
         user: {
           id: bookmark.post.user.id,
           fullname: bookmark.post.user.fullname,
@@ -126,6 +127,7 @@ export class BookmarkRepo implements IBookmarkRepo {
       id: bookmark.post.id,
       caption: bookmark.post.caption,
       imageUrl: bookmark.post.imageUrl,
+      trendingScore: bookmark.post.trendingScore,
       user: {
         id: bookmark.post.user.id,
         fullname: bookmark.post.user.fullname,
@@ -197,6 +199,7 @@ export class BookmarkRepo implements IBookmarkRepo {
       id: bookmark.post.id,
       caption: bookmark.post.caption,
       imageUrl: bookmark.post.imageUrl,
+      trendingScore: bookmark.post.trendingScore,
       user: {
         id: bookmark.post.user.id,
         fullname: bookmark.post.user.fullname,
@@ -262,6 +265,7 @@ export class BookmarkRepo implements IBookmarkRepo {
       id: bookmark.post.id,
       caption: bookmark.post.caption,
       imageUrl: bookmark.post.imageUrl,
+      trendingScore: bookmark.post.trendingScore,
       user: {
         id: bookmark.post.user.id,
         fullname: bookmark.post.user.fullname,

@@ -55,6 +55,7 @@ export class RepostRepo implements IRepostRepo {
         id: repost.post.id,
         caption: repost.post.caption,
         imageUrl: repost.post.imageUrl,
+        trendingScore: repost.post.trendingScore,
         user: {
           id: repost.post.user.id,
           fullname: repost.post.user.fullname,
@@ -123,6 +124,7 @@ export class RepostRepo implements IRepostRepo {
       id: repost.post.id,
       caption: repost.post.caption,
       imageUrl: repost.post.imageUrl,
+      trendingScore: repost.post.trendingScore,
       user: {
         id: repost.post.user.id,
         fullname: repost.post.user.fullname,
@@ -194,6 +196,7 @@ export class RepostRepo implements IRepostRepo {
       id: repost.post.id,
       caption: repost.post.caption,
       imageUrl: repost.post.imageUrl,
+      trendingScore: repost.post.trendingScore,
       user: {
         id: repost.post.user.id,
         fullname: repost.post.user.fullname,
@@ -259,6 +262,7 @@ export class RepostRepo implements IRepostRepo {
       id: repost.post.id,
       caption: repost.post.caption,
       imageUrl: repost.post.imageUrl,
+      trendingScore: repost.post.trendingScore,
       user: {
         id: repost.post.user.id,
         fullname: repost.post.user.fullname,
