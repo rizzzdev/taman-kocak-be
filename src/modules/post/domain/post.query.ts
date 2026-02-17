@@ -3,11 +3,16 @@ import type { PaginationQuery } from "../../../shared/types/pagination-query.typ
 export interface GetPostQuery {
   includeUser?: boolean;
   includeComments?: boolean;
+  includeLikes?: boolean;
   includeReposts?: boolean;
   includeBookmarks?: boolean;
 }
 
-export interface GetPostsQuery extends GetPostQuery, PaginationQuery {}
+export interface GetPostsQuery extends GetPostQuery, PaginationQuery {
+  userId?: string;
+  includeAll?: boolean;
+  isTrending?: boolean;
+}
 
 export interface PostPostQuery extends GetPostQuery {}
 

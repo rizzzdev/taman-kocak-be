@@ -4,4 +4,6 @@ export interface PostPostDTO {
   userId: string;
 }
 
-export interface PatchPostDTO extends Partial<PostPostDTO> {}
+export interface PatchPostDTO extends Partial<PostPostDTO> {
+  trendingScore?: number;
+}

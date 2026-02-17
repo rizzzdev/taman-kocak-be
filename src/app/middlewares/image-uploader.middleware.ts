@@ -3,6 +3,7 @@ import multer, { type FileFilterCallback } from "multer";
 import { BadRequestError } from "../../shared/errors/index.js";
 import { imageUploaderApi } from "../../shared/utils/image-uploader-api.util.js";
 import fs from "fs";
+import axios from "axios";
 
 // const storage = multer.diskStorage({
 //   destination: (request, file, callback) => {
@@ -81,4 +82,39 @@ export const imageUploaderMiddleware = (type: ImageType) => {
       return next();
     });
   };
+};
+
+const upload = () => {
+  const storage = multer.memoryStorage();
+
+  return multer({
+    storage,
+  });
+};
+
+export const uploadMiddleware = (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  upload().single("image")(request, response, async () => {
+    if (request.file) {
+      const image = request.file.buffer.toString();
+
+      try {
+        const _response = await axios.post(
+          "https://api.imgbb.com/1/upload?key=8fe14a6567fd63dc0ad5ad99f4523c3a",
+          {
+            image,
+          },
+        );
+
+        return response.send({ success: true, image: image });
+      } catch (error) {
+        return response.send({ success: false, image });
+      }
+    }
+
+    return response.send({ file: null });
+  });
 };

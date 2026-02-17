@@ -134,6 +134,9 @@ const getUserByIdRepo = async (id: string, query?: GetUserQuery) => {
     },
     include: {
       sessions: {
+        where: {
+          deletedAt: nonDeletedDate(),
+        },
         omit: {
           userId: true,
         },

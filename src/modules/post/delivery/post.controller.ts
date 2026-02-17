@@ -47,6 +47,18 @@ export class PostController {
       ...(query?.includeBookmarks && {
         includeBookmarks: Boolean(query.includeBookmarks),
       }),
+      ...(query?.includeLikes && {
+        includeLikes: Boolean(query.includeLikes),
+      }),
+      ...(query?.includeAll && {
+        includeAll: Boolean(query.includeAll),
+      }),
+      ...(query?.isTrending && {
+        isTrending: Boolean(query.isTrending),
+      }),
+      ...(query?.userId && {
+        userId: query?.userId,
+      }),
     };
 
     try {
@@ -86,6 +98,9 @@ export class PostController {
       ...(query?.includeBookmarks && {
         includeBookmarks: Boolean(query.includeBookmarks),
       }),
+      ...(query?.includeLikes && {
+        includeLikes: Boolean(query.includeLikes),
+      }),
     };
 
     try {
@@ -124,6 +139,9 @@ export class PostController {
       }),
       ...(query?.includeBookmarks && {
         includeBookmarks: Boolean(query.includeBookmarks),
+      }),
+      ...(query?.includeLikes && {
+        includeLikes: Boolean(query.includeLikes),
       }),
     };
 
@@ -166,6 +184,9 @@ export class PostController {
       ...(query?.includeBookmarks && {
         includeBookmarks: Boolean(query.includeBookmarks),
       }),
+      ...(query?.includeLikes && {
+        includeLikes: Boolean(query.includeLikes),
+      }),
     };
 
     try {
@@ -205,6 +226,9 @@ export class PostController {
       }),
       ...(query?.includeBookmarks && {
         includeBookmarks: Boolean(query.includeBookmarks),
+      }),
+      ...(query?.includeLikes && {
+        includeLikes: Boolean(query.includeLikes),
       }),
     };
 

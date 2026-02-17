@@ -46,6 +46,18 @@ export class BookmarkService implements IBookmarkService {
       throw new NotFoundError("No post data found!");
     }
 
+    const isBookmarkExist = await this.bookmarkRepo.getBookmarks({
+      userId: data.userId,
+      postId: data.postId,
+    });
+    if (isBookmarkExist.length > 0) {
+      const bookmark = await this.bookmarkRepo.deleteBookmarkById(
+        isBookmarkExist[0]!.id,
+      );
+
+      return bookmark;
+    }
+
     const bookmark = await this.bookmarkRepo.postBookmark(data);
 
     return bookmark;

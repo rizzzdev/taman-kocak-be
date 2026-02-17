@@ -43,6 +43,16 @@ export class LikeService implements ILikeService {
       throw new NotFoundError("No post data found!");
     }
 
+    const isLikeExist = await this.LikeRepo.getLikes({
+      userId: data.userId,
+      postId: data.postId,
+    });
+    if (isLikeExist.length > 0) {
+      const like = await this.LikeRepo.deleteLikeById(isLikeExist[0]!.id);
+
+      return like;
+    }
+
     const like = await this.LikeRepo.postLike(data);
 
     return like;

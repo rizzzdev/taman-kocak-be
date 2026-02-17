@@ -1,4 +1,8 @@
-import { NotFoundError } from "../../../shared/errors/index.js";
+import { compareSync } from "bcrypt";
+import {
+  BadRequestError,
+  NotFoundError,
+} from "../../../shared/errors/index.js";
 import { imageRemover } from "../../../shared/utils/image-remover.util.js";
 import type { PatchUserDTO, PostUserDTO } from "../domain/user.dto.js";
 import type {
@@ -47,7 +51,9 @@ export class UserService implements IUserService {
   }
 
   async patchUserById(id: string, data: PatchUserDTO, query?: PatchUserQuery) {
-    const isUserExist = await this.userRepo.getUserById(id, query);
+    const isUserExist = await this.userRepo.getUserById(id, {
+      includePassword: true,
+    });
     if (!isUserExist) {
       throw new NotFoundError("No user data found!");
     }
@@ -69,6 +75,25 @@ export class UserService implements IUserService {
       data.username !== isUserExist.username
     ) {
       throw new NotFoundError("Username already used!");
+    }
+
+    if (!data.oldPassword && !data.password) {
+      const user = await this.userRepo.patchUserById(id, data, query);
+
+      return user;
+    }
+
+    if (data.password && !data.oldPassword) {
+      throw new BadRequestError("Old password is required!");
+    }
+
+    const isOldPasswordMatch =
+      data.oldPassword &&
+      data.password &&
+      compareSync(data.oldPassword, isUserExist!.password!);
+
+    if (!isOldPasswordMatch) {
+      throw new BadRequestError("Old password is incorrect!");
     }
 
     const user = await this.userRepo.patchUserById(id, data, query);

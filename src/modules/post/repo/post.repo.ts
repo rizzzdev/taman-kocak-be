@@ -30,14 +30,31 @@ export class PostRepo implements IPostRepo {
     const posts = await prisma.post.findMany({
       where: {
         deletedAt: nonDeletedDate(),
+        ...(query?.userId && { userId: query.userId }),
       },
-      take: query?.limit || 10,
-      skip: query?.page ? query.page * (query.limit || 10) : 0,
+      orderBy: {
+        ...(query?.isTrending
+          ? {
+              trendingScore: "desc",
+            }
+          : {
+              createdAt: "desc",
+            }),
+      },
+      ...(!query?.includeAll && {
+        take: query?.limit || 10,
+      }),
+      ...(!query?.includeAll && {
+        skip: query?.page ? query.page * (query.limit || 10) : 0,
+      }),
       include: {
         user: true,
         comments: {
           where: {
             deletedAt: nonDeletedDate(),
+          },
+          orderBy: {
+            createdAt: "desc",
           },
           include: {
             user: true,
@@ -71,6 +88,18 @@ export class PostRepo implements IPostRepo {
             userId: true,
           },
         },
+        likes: {
+          where: {
+            deletedAt: nonDeletedDate(),
+          },
+          include: {
+            user: true,
+          },
+          omit: {
+            postId: true,
+            userId: true,
+          },
+        },
       },
     });
 
@@ -79,6 +108,7 @@ export class PostRepo implements IPostRepo {
         id: post.id,
         caption: post.caption,
         imageUrl: post.imageUrl,
+        trendingScore: post.trendingScore,
         ...(query?.includeUser && {
           user: {
             id: post.user.id,
@@ -93,6 +123,24 @@ export class PostRepo implements IPostRepo {
         }),
         ...(query?.includeBookmarks && {
           bookmarks: post.bookmarks.map((bookmark) => ({
+            id: bookmark.id,
+            user: {
+              id: bookmark.user.id,
+              username: bookmark.user.username,
+              fullname: bookmark.user.fullname,
+              pictureUrl: bookmark.user.pictureUrl,
+              role: bookmark.user.role as "USER",
+              createdAt: bookmark.user.createdAt,
+              lastUpdatedAt: bookmark.user.lastUpdatedAt,
+              deletedAt: bookmark.user.deletedAt,
+            },
+            createdAt: bookmark.createdAt,
+            lastUpdatedAt: bookmark.lastUpdatedAt,
+            deletedAt: bookmark.deletedAt,
+          })),
+        }),
+        ...(query?.includeLikes && {
+          likes: post.likes.map((bookmark) => ({
             id: bookmark.id,
             user: {
               id: bookmark.user.id,
@@ -169,12 +217,15 @@ export class PostRepo implements IPostRepo {
           include: {
             user: true,
           },
+          orderBy: {
+            createdAt: "desc",
+          },
           omit: {
             postId: true,
             userId: true,
           },
         },
-        bookmarks: {
+        likes: {
           where: {
             deletedAt: nonDeletedDate(),
           },
@@ -198,6 +249,18 @@ export class PostRepo implements IPostRepo {
             userId: true,
           },
         },
+        bookmarks: {
+          where: {
+            deletedAt: nonDeletedDate(),
+          },
+          include: {
+            user: true,
+          },
+          omit: {
+            postId: true,
+            userId: true,
+          },
+        },
       },
     });
 
@@ -209,6 +272,7 @@ export class PostRepo implements IPostRepo {
       id: post.id,
       caption: post.caption,
       imageUrl: post.imageUrl,
+      trendingScore: post.trendingScore,
       ...(query?.includeUser && {
         user: {
           id: post.user.id,
@@ -237,6 +301,24 @@ export class PostRepo implements IPostRepo {
           createdAt: bookmark.createdAt,
           lastUpdatedAt: bookmark.lastUpdatedAt,
           deletedAt: bookmark.deletedAt,
+        })),
+      }),
+      ...(query?.includeLikes && {
+        likes: post.likes.map((like) => ({
+          id: like.id,
+          user: {
+            id: like.user.id,
+            username: like.user.username,
+            fullname: like.user.fullname,
+            pictureUrl: like.user.pictureUrl,
+            role: like.user.role as "USER",
+            createdAt: like.user.createdAt,
+            lastUpdatedAt: like.user.lastUpdatedAt,
+            deletedAt: like.user.deletedAt,
+          },
+          createdAt: like.createdAt,
+          lastUpdatedAt: like.lastUpdatedAt,
+          deletedAt: like.deletedAt,
         })),
       }),
       ...(query?.includeComments && {
@@ -302,6 +384,7 @@ export class PostRepo implements IPostRepo {
       id: post.id,
       caption: post.caption,
       imageUrl: post.imageUrl,
+      trendingScore: post.trendingScore,
       ...(query?.includeUser && {
         user: {
           id: post.user.id,
@@ -319,6 +402,9 @@ export class PostRepo implements IPostRepo {
       }),
       ...(query?.includeComments && {
         comments: [],
+      }),
+      ...(query?.includeLikes && {
+        likes: [],
       }),
       ...(query?.includeReposts && {
         reposts: [],
@@ -344,6 +430,9 @@ export class PostRepo implements IPostRepo {
       data: {
         ...(data.caption && { caption: data.caption }),
         ...(data.imageUrl && { imageUrl: data.imageUrl }),
+        ...(typeof data.trendingScore === "number" && {
+          trendingScore: data.trendingScore,
+        }),
         lastUpdatedAt: localDateNow(),
       },
       include: {
@@ -384,6 +473,18 @@ export class PostRepo implements IPostRepo {
             userId: true,
           },
         },
+        likes: {
+          where: {
+            deletedAt: nonDeletedDate(),
+          },
+          include: {
+            user: true,
+          },
+          omit: {
+            postId: true,
+            userId: true,
+          },
+        },
       },
     });
 
@@ -391,6 +492,7 @@ export class PostRepo implements IPostRepo {
       id: post.id,
       caption: post.caption,
       imageUrl: post.imageUrl,
+      trendingScore: post.trendingScore,
       ...(query?.includeUser && {
         user: {
           id: post.user.id,
@@ -438,6 +540,24 @@ export class PostRepo implements IPostRepo {
           createdAt: comment.createdAt,
           lastUpdatedAt: comment.lastUpdatedAt,
           deletedAt: comment.deletedAt,
+        })),
+      }),
+      ...(query?.includeLikes && {
+        likes: post.likes.map((like) => ({
+          id: like.id,
+          user: {
+            id: like.user.id,
+            username: like.user.username,
+            fullname: like.user.fullname,
+            pictureUrl: like.user.pictureUrl,
+            role: like.user.role as "USER",
+            createdAt: like.user.createdAt,
+            lastUpdatedAt: like.user.lastUpdatedAt,
+            deletedAt: like.user.deletedAt,
+          },
+          createdAt: like.createdAt,
+          lastUpdatedAt: like.lastUpdatedAt,
+          deletedAt: like.deletedAt,
         })),
       }),
       ...(query?.includeReposts && {
@@ -501,6 +621,16 @@ export class PostRepo implements IPostRepo {
         },
       });
 
+      await tx.like.updateMany({
+        where: {
+          postId: id,
+          deletedAt: nonDeletedDate(),
+        },
+        data: {
+          deletedAt: localDateNow(),
+        },
+      });
+
       await tx.repost.updateMany({
         where: {
           postId: id,
@@ -515,6 +645,7 @@ export class PostRepo implements IPostRepo {
         id: post.id,
         caption: post.caption,
         imageUrl: post.imageUrl,
+        trendingScore: post.trendingScore,
         ...(query?.includeUser && {
           user: {
             id: post.user.id,
@@ -529,6 +660,9 @@ export class PostRepo implements IPostRepo {
         }),
         ...(query?.includeBookmarks && {
           bookmarks: [],
+        }),
+        ...(query?.includeLikes && {
+          likes: [],
         }),
         ...(query?.includeComments && {
           comments: [],

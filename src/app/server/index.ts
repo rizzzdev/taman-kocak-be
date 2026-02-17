@@ -8,6 +8,7 @@ import { errorMiddleware } from "../middlewares/error.middleware.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 // import { isOwnerMiddleware } from "../middlewares/is-owner.middleware.js";
 import { staticFileMiddleware } from "../middlewares/static-file.middleware.js";
+import { uploadMiddleware } from "../middlewares/image-uploader.middleware.js";
 
 const server = () => {
   const app = express();
@@ -21,6 +22,7 @@ const server = () => {
   routers(app);
   staticFileMiddleware(app);
   app.use(errorMiddleware);
+  app.post("/upload", uploadMiddleware);
 
   return app;
 };

@@ -109,6 +109,7 @@ export const PostScalarFieldEnum = {
   id: 'id',
   caption: 'caption',
   imageUrl: 'imageUrl',
+  trendingScore: 'trendingScore',
   createdAt: 'createdAt',
   lastUpdatedAt: 'lastUpdatedAt',
   deletedAt: 'deletedAt',

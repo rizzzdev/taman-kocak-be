@@ -43,6 +43,18 @@ export class RepostService implements IRepostService {
       throw new NotFoundError("No post data found!");
     }
 
+    const isRepostExist = await this.repostRepo.getReposts({
+      userId: data.userId,
+      postId: data.postId,
+    });
+    if (isRepostExist.length > 0) {
+      const repost = await this.repostRepo.deleteRepostById(
+        isRepostExist[0]!.id,
+      );
+
+      return repost;
+    }
+
     const repost = await this.repostRepo.postRepost(data);
 
     return repost;

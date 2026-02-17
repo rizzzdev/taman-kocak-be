@@ -3,8 +3,8 @@ import type { UserEntity } from "../../user/domain/user.entity.js";
 
 export interface LikeEntity {
   id: string;
-  post: PostEntity;
-  user: UserEntity;
+  post?: PostEntity;
+  user?: UserEntity;
   createdAt: Date;
   lastUpdatedAt: Date | null;
   deletedAt: Date;
