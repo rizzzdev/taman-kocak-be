@@ -48,7 +48,7 @@ export class PostService implements IPostService {
     }
 
     if (data.imageUrl && isPostExist.imageUrl) {
-      imageRemover(isPostExist.imageUrl);
+      await imageRemover(isPostExist.imageUrl);
     }
 
     const post = await this.postRepo.patchPostById(id, data, query);

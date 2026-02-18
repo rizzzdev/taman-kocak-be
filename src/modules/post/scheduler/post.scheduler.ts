@@ -34,7 +34,10 @@ const calculateTrendingPerPost = async (post: PostEntity) => {
     40 * repostsCount +
     30 * bookmarksCount;
 
-  const trendingScore = (weightScore * 1000) / (hoursSinceCreated + 2) ** 1.5;
+  const rawTrendingScore =
+    (weightScore * 1000) / (hoursSinceCreated + 2) ** 1.5;
+
+  const trendingScore = Math.round(rawTrendingScore * 1000) / 1000;
 
   await postRepo.patchPostById(post.id, { trendingScore });
 };

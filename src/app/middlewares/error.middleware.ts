@@ -21,6 +21,8 @@ export const errorMiddleware = (
   const imageUrl = request.body?.pictureUrl || request.body?.imageUrl;
   imageUrl && imageRemover(imageUrl);
 
+  console.log({ error });
+
   if (error instanceof BadRequestError) {
     const apiResponse: ApiResponse<null> = {
       error: true,

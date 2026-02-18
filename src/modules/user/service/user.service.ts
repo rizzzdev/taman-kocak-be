@@ -59,7 +59,7 @@ export class UserService implements IUserService {
     }
 
     if (data.pictureUrl && isUserExist.pictureUrl) {
-      imageRemover(isUserExist.pictureUrl);
+      await imageRemover(isUserExist.pictureUrl);
     }
 
     if (data.username) {

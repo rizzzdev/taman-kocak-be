@@ -46,6 +46,7 @@ export const imageUploaderMiddleware = (type: ImageType) => {
       }
 
       if (request.file && request.file.size > 5 * MB_IN_BYTES) {
+        console.log({ fileSize: request.file.size });
         const error = new BadRequestError("Image size must be less than 5MB!");
 
         return next(error);
@@ -61,6 +62,7 @@ export const imageUploaderMiddleware = (type: ImageType) => {
         .upload(path + filename, imageBuffer);
 
       if (_error) {
+        console.log({ error: _error });
         const error = new BadRequestError(_error.message);
 
         return next(error);

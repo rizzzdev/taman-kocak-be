@@ -1,7 +1,6 @@
-import fs from "fs";
+import { supabaseClient } from "../../app/database/supabase/index.js";
+import { BadRequestError } from "../errors/index.js";
 
-export const imageRemover = (path: string) => {
-  if (fs.existsSync(process.cwd() + path)) {
-    fs.unlinkSync(process.cwd() + path);
-  }
+export const imageRemover = async (path: string) => {
+  await supabaseClient.storage.from("image").remove([path.slice(1)]);
 };
